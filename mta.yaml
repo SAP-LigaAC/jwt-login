@@ -1,0 +1,32 @@
+ID: jwtproxy
+_schema-version: 3.1.0
+description: 'JWT PROXY'
+version: 1.0.0
+
+modules:
+  - name: jwt-proxy
+    type: java
+    path: ./
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean install -P cloud -T 1.5C
+      build-result: target/*.jar
+      timeout: 15m00s
+    properties:
+      JBP_CONFIG_OPEN_JDK_JRE: "{ jre: {version: 11.+ }}"
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jdk.SAPMachineJDK']"
+    parameters:
+      memory: 1G
+      instances: 1
+      host: ${org}-${space}-jwt-proxy
+      domain: ${default-domain}
+    requires:
+      - name: bookings-uaa
+      - name: bookings-logging
+
+resources:
+  - name: bookings-logging
+    type: org.cloudfoundry.existing-service
+  - name: bookings-uaa
+    type: org.cloudfoundry.existing-service
