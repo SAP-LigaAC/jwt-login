@@ -1,0 +1,4 @@
+spring:
+  profiles: cloud
+name: cloud-YAML
+environment: cloud
